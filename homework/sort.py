@@ -16,15 +16,15 @@ extensions = {
 }
 
 def create_dirs(path):
-    os.mkdir(f"{path}\\images")
-    os.mkdir(f"{path}\\video")
-    os.mkdir(f"{path}\\documents")
-    os.mkdir(f"{path}\\music")
-    os.mkdir(f"{path}\\archives")
-    os.mkdir(f"{path}\\others")
+    os.mkdir(f"{path}/images")
+    os.mkdir(f"{path}/video")
+    os.mkdir(f"{path}/documents")
+    os.mkdir(f"{path}/music")
+    os.mkdir(f"{path}/archives")
+    os.mkdir(f"{path}/others")
 try:
     create_dirs(path)
-except:
+except FileExistsError:
     pass
 
 
@@ -55,17 +55,54 @@ def sorter(path):
 #         name, ext = os.path.splitext(each)
 #         shutil.unpack_archive(each, f"{path}\\archives\\{name}")
             
-# unpack_arch(path)           
-       
-sorter(path)   
+# unpack_arch(path)   
 
-def normalize():
-    table = finditer(r"(/^[A-Za-z]+$/)")
-    for i in table:
-        print(i)
-normalize()
+
+
+
+# sorter(path)   
+
+def normalize(path):
+    table = {
+        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g',
+        'д': 'd', 'е': 'e', 'є': 'ie', 'ж': 'zh', 'з': 'z',
+        'и': 'y', 'і': 'i', 'ї': 'i', 'й': 'i', 'к': 'k',
+        'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
+        'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f',
+        'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
+        'ь': '', 'ю': 'iu', 'я': 'ia', 'А': 'A', 'Б': 'B',
+        'В': 'V', 'Г': 'H', 'Ґ': 'G', 'Д': 'D', 'Е': 'E',
+        'Є': 'IE', 'Ж': 'ZH', 'З': 'Z', 'И': 'Y', 'І': 'I',
+        'Ї': 'I', 'Й': 'I', 'К': 'K', 'Л': 'L', 'М': 'M',
+        'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S',
+        'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'KH', 'Ц': 'TS',
+        'Ч': 'CH', 'Ш': 'SH', 'Щ': 'SHCH', 'Ь': '', 'Ю': 'IU',
+        'Я': 'IA', ' ': ' ', '/':'/', '~':'~', 'w':'w'
+    }
+    text = ''
+    # directory, filename = os.path.split(path)
+    for i in path:
+        if i not in table.values():
+            if i in table.keys():
+                text+=table[i]
+            elif '0'<=i<='9':
+                text+=i
+            else:
+                text+='_'
+        else:
+            text+=i
+    return os.rename(f'{path}', f'{text}')
+    # trans = ''.join(table.get(i, i) for i in filename)
+    # return os.path.join(directory, trans)
+    # for i in path:
+    #     if i in table:
+    #         text += table[i]
+    #         print(text)
+    #     else:
+    #         text += i +'/'
+    # print(text)
+normalize(path)
     
-
 
 
 
