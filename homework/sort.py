@@ -4,7 +4,7 @@ import sys
 import os
 import shutil
 
-path = sys.argv[1]
+path = input(">>> ")
 extensions = {
 "images":['.jpeg', '.png', '.jpg', '.svg'],
 "video":['.avi', '.mp4', '.mov', '.mkv'],
@@ -14,52 +14,45 @@ extensions = {
 "others":[]
 }
 
+new_path = path
+
+
 def create_dirs(path):
-    os.mkdir(f"{path}/images")
-    os.mkdir(f"{path}/video")
-    os.mkdir(f"{path}/documents")
-    os.mkdir(f"{path}/music")
-    os.mkdir(f"{path}/archives")
-    os.mkdir(f"{path}/others")
-try:
-    create_dirs(path)
-except FileExistsError:
-    pass
+    os.mkdir(f"{path}\\images")
+    os.mkdir(f"{path}\\video")
+    os.mkdir(f"{path}\\documents")
+    os.mkdir(f"{path}\\music")
+    os.mkdir(f"{path}\\archives")
+    os.mkdir(f"{path}\\others")
+
 
 
 def sorter(path):
     all = os.listdir(path)
-    
+    lst = []
     for x in all:
         name, ext = os.path.splitext(x)
-        
         if x in all:
-            if not os.path.isdir(x):
+            
+            if not os.path.isdir(f"{path}\\{x}"):
+                lst.append(x)
                 for key, val in extensions.items():
+
                     if ext in val:
-                        os.rename(f"{path}/{x}", f"{path}/{key}/{x}")
-                    else:
-                        if x == "sort.py":
-                            pass
-                        
-            elif x in extensions.keys():
-                pass
-            
-            elif os.path.isdir(x):
-                os.rename(f"{path}/{x}", f"{path}/others/{x}")
+                        os.rename(f"{path}\\{x}", f"{path}\\{key}\\{name}{ext}")
+                        lst.remove(x)
+    for i in lst:
+        os.rename(f"{path}\\{i}", f"{new_path}\\others\\{i}")                    
+
+          
+             
                 
-# def unpack_arch(path):
-#     way = [i for i in os.listdir(f"{path}\\archives\\")]
-#     for each in way:
-#         name, ext = os.path.splitext(each)
-#         shutil.unpack_archive(each, f"{path}\\archives\\{name}")
-            
-# unpack_arch(path)   
 
 
 
 
-sorter(path)   
+
+ 
 
 def normalize(path):
     text = ''
@@ -97,20 +90,39 @@ def normalize(path):
     return os.rename(f'{path}', f'{text}')
     
 
-def read_files_and_folders(path):
-    
-    for item in os.listdir(path):
-        item_path = os.path.join(path, item)
+def files_dirs(path):
+    result = [f.path for f in os.scandir(path) if f.is_dir()]
+    for item in result:
+        if item.split("\\")[-1] not in extensions.keys():
+            files_dirs(item)
+            sorter(item)
+            
+            
+def unpack_arch(path):
+    way = [i for i in os.listdir(f"{path}\\archives\\")]
+    for i in way:
+        name = i.split(".")[0]
+        os.mkdir(f"{path}\\archives"+f"\\{name}")
+        shutil.unpack_archive(f"{path}\\archives\\{i}", f"{path}\\archives\\{name}")
+        os.remove(f"{path}\\archives\\{i}")
         
-        if os.path.isfile(item_path):
-            normalize(item_path)
+def delete(path): 
+    checker = [f.path for f in os.scandir(path) if f.is_dir()]
+    empty = []
+    for i in checker:
+        delete(i)
+        empty.append(i)
+        
+    return empty
             
-        elif os.path.isdir(item_path):
-            normalize(item_path)
-            read_files_and_folders(item_path)
-            
-read_files_and_folders(path)
+ 
 
+# create_dirs(path)
+# sorter(path) 
+# files_dirs(path)
+# unpack_arch(path)    
+r = delete(path)   
+print(r)
 
 
 
