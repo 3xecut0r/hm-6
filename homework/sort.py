@@ -106,18 +106,18 @@ def unpack_arch(path):
         shutil.unpack_archive(f"{path}\\archives\\{i}", f"{path}\\archives\\{name}")
         os.remove(f"{path}\\archives\\{i}")
         
-def get_subfolders(path):
-    subfolders = []
-    for item in os.listdir(path):
-        item_path = os.path.join(path, item)
-        if os.path.isdir(item_path):
-            subfolders.append(item_path)
-            subfolders.extend(get_subfolders(item_path))
-    return subfolders
+def get_pre(path):
+    pre = []
+    for i in os.listdir(path):
+        ipath = os.path.join(path, i)
+        if os.path.isdir(ipath):
+            pre.append(ipath)
+            pre.extend(get_pre(ipath))
+    return pre
 def delete(path):
-    list_with_folders = get_subfolders(path)
-    list_with_folders.reverse()
-    for i in list_with_folders:
+    dirs_lst = get_pre(path)
+    dirs_lst.reverse()
+    for i in dirs_lst:
         name = i.split('\\')[-1]
         if name not in extensions.keys():
             if len(os.listdir(i))==0:
