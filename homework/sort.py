@@ -4,7 +4,7 @@ import sys
 import os
 import shutil
 
-path = input(">>> ")
+path = sys.argv[1]
 extensions = {
 "images":['.jpeg', '.png', '.jpg', '.svg'],
 "video":['.avi', '.mp4', '.mov', '.mkv'],
@@ -124,11 +124,12 @@ def delete(path):
                 os.rmdir(i)
  
 
-# create_dirs(path)
-# sorter(path) 
-# files_dirs(path)
-# unpack_arch(path)
-delete(path)
+if __name__ == "__main__":
+    create_dirs(path)
+    sorter(path) 
+    files_dirs(path)
+    unpack_arch(path)
+    delete(path)
 
 
 
