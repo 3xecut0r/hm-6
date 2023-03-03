@@ -32,6 +32,7 @@ def sorter(path):
     lst = []
     for x in all:
         name, ext = os.path.splitext(x)
+        name = normalize(name)
         if x in all:
             
             if not os.path.isdir(f"{path}\\{x}"):
@@ -48,47 +49,26 @@ def sorter(path):
              
                 
 
-
-
-
-
- 
-
-def normalize(path):
-    text = ''
-    
-    table = {
-        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g',
-        'д': 'd', 'е': 'e', 'є': 'ie', 'ж': 'zh', 'з': 'z',
-        'и': 'y', 'і': 'i', 'ї': 'i', 'й': 'i', 'к': 'k',
-        'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
-        'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f',
-        'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
-        'ь': '', 'ю': 'iu', 'я': 'ia', 'А': 'A', 'Б': 'B',
-        'В': 'V', 'Г': 'H', 'Ґ': 'G', 'Д': 'D', 'Е': 'E',
-        'Є': 'IE', 'Ж': 'ZH', 'З': 'Z', 'И': 'Y', 'І': 'I',
-        'Ї': 'I', 'Й': 'I', 'К': 'K', 'Л': 'L', 'М': 'M',
-        'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S',
-        'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'KH', 'Ц': 'TS',
-        'Ч': 'CH', 'Ш': 'SH', 'Щ': 'SHCH', 'Ь': '', 'Ю': 'IU',
-        'Я': 'IA', ' ': ' ', '/':'/', '~':'~', 'w':'w', 'c':'c',
-        '.':'.', 'x':'x'
-    }
-    
-    
-    for i in path:
+def normalize(word):
+    result=''
+    table ={'А': 'A', 'а': 'a', 'Б': 'B', 'б': 'b', 'В': 'V', 'в': 'v', 'Г': 'G', 'г': 'g', 'Д': 'D', 'д': 'd',
+ 'Е': 'E', 'е': 'e', 'Ё': 'E', 'ё': 'e', 'Ж': 'J', 'ж': 'j', 'З': 'Z', 'з': 'z', 'И': 'I', 'и': 'i', 'Й': 'J', 'й': 'j', 'К': 'K', 'к': 'k', 'Л': 'L',
+ 'л': 'l', 'М': 'M', 'м': 'm', 'Н': 'N', 'н': 'n', 'О': 'O', 'о': 'o', 'П': 'P', 'п': 'p', 'Р': 'R', 'р': 'r', 'С': 'S', 'с': 's', 'Т': 'T',
+ 'т': 't', 'У': 'U', 'у': 'u', 'Ф': 'F', 'ф': 'f', 'Х': 'H', 'х': 'h', 'Ц': 'TS', 'ц': 'c', 'Ч': 'CH', 'ч': 'ch', 'Ш': 'SH', 'ш': 'sh',
+ 'Щ': 'SCH', 'щ': 'sch', 'Ъ': '', 'ъ': '', 'Ы': 'Y', 'ы': 'y', 'Ь': '', 'ь': '', 'Э': 'E', 'э': 'e', 'Ю': 'YU',
+ 'ю': 'yu', 'Я': 'YA', 'я': 'ya', 'Є': 'JE', 'є': 'je', 'І': 'I', 'і': 'i', 'Ї': 'JI', 'ї': 'ji', 'Ґ': 'G', 'ґ': 'g', '.':'.', '\\':'\\', ':':':',
+ 'A':'A', 'B':'B', 'C':'C', 'D':'D'}
+    for i in word:
         if i not in table.values():
             if i in table.keys():
-                text+=table[i]
+                result+=table[i]
             elif '0'<=i<='9':
-                text+=i
+                result+=i
             else:
-                text+='_'
+                result+='_'
         else:
-            text+=i
-            
-    return os.rename(f'{path}', f'{text}')
-    
+            result+=i
+    return result  
 
 def files_dirs(path):
     result = [f.path for f in os.scandir(path) if f.is_dir()]
@@ -106,16 +86,16 @@ def unpack_arch(path):
         shutil.unpack_archive(f"{path}\\archives\\{i}", f"{path}\\archives\\{name}")
         os.remove(f"{path}\\archives\\{i}")
         
-def get_pre(path):
+def sub(path):
     pre = []
     for i in os.listdir(path):
         ipath = os.path.join(path, i)
         if os.path.isdir(ipath):
             pre.append(ipath)
-            pre.extend(get_pre(ipath))
+            pre.extend(sub(ipath))
     return pre
 def delete(path):
-    dirs_lst = get_pre(path)
+    dirs_lst = sub(path)
     dirs_lst.reverse()
     for i in dirs_lst:
         name = i.split('\\')[-1]
@@ -125,7 +105,10 @@ def delete(path):
  
 
 if __name__ == "__main__":
-    create_dirs(path)
+    try:
+        create_dirs(path)
+    except:
+        pass
     sorter(path) 
     files_dirs(path)
     unpack_arch(path)
