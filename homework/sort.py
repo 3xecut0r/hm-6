@@ -3,8 +3,9 @@ import sys
 import os
 import shutil
 
-path = pathlib.Path(sys.argv[1])
-new_path = path
+
+    
+
 
 extensions = {
 "images":['.jpeg', '.png', '.jpg', '.svg'],
@@ -16,15 +17,11 @@ extensions = {
 }
 
 
-
-
 def create_dirs(path):
     for folder in extensions:
         target = path / folder 
         if not target.exists():
             target.mkdir()
-
-
 
 def sorter(path):
     all = os.listdir(path)
@@ -42,12 +39,8 @@ def sorter(path):
                         os.rename(f"{path}\\{x}", f"{path}\\{key}\\{name}{ext}")
                         lst.remove(x)
     for i in lst:
-        os.rename(f"{path}\\{i}", f"{new_path}\\others\\{i}")                    
-
-          
-             
-                
-
+        os.rename(f"{path}\\{i}", f"{new_path}\\others\\{i}")                                  
+        
 def normalize(word):
     result=''
     table ={'А': 'A', 'а': 'a', 'Б': 'B', 'б': 'b', 'В': 'V', 'в': 'v', 'Г': 'G', 'г': 'g', 'Д': 'D', 'д': 'd',
@@ -93,6 +86,7 @@ def sub(path):
             pre.append(ipath)
             pre.extend(sub(ipath))
     return pre
+
 def delete(path):
     dirs_lst = sub(path)
     dirs_lst.reverse()
@@ -103,15 +97,17 @@ def delete(path):
                 os.rmdir(i)
  
 
-
-if os.path.isdir(path):
-    create_dirs(path)
-    sorter(path) 
-    files_dirs(path)
-    unpack_arch(path)
-    delete(path)    
-else:
-    print("Шлях не є папкою")
+try:
+    path = pathlib.Path(sys.argv[1])
+    new_path = path
+    if os.path.isdir(path):
+        create_dirs(path)
+        sorter(path) 
+        files_dirs(path)
+        unpack_arch(path)
+        delete(path)     
+except:
+      print("Шлях не є папкою")  
 
 
 
