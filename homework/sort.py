@@ -96,18 +96,18 @@ def delete(path):
             if len(os.listdir(i))==0:
                 os.rmdir(i)
  
-
-try:
-    path = pathlib.Path(sys.argv[1])
-    new_path = path
-    if os.path.isdir(path):
-        create_dirs(path)
-        sorter(path) 
-        files_dirs(path)
-        unpack_arch(path)
-        delete(path)     
-except:
-      print("Шлях не є папкою")  
+if __name__ == "__main__":
+    try:
+        path = pathlib.Path(sys.argv[1])
+        new_path = path
+        if os.path.isdir(path):
+            create_dirs(path)
+            sorter(path) 
+            files_dirs(path)
+            unpack_arch(path)
+            delete(path)     
+    except:
+        print("Шлях не є папкою")  
 
 
 
