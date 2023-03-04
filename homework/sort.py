@@ -1,12 +1,10 @@
-import pathlib as Path
+import pathlib
 import sys
 import os
 import shutil
 
-try:
-    path = Path(sys.argv[1])
-except:
-    exit()
+path = pathlib.Path(sys.argv[1])
+new_path = path
 
 extensions = {
 "images":['.jpeg', '.png', '.jpg', '.svg'],
@@ -17,14 +15,13 @@ extensions = {
 "others":[]
 }
 
-new_path = path
 
 
-def create_dirs(path: Path):
+
+def create_dirs(path):
     for folder in extensions:
-        target = f"{path}\{folder}"
+        target = path / folder 
         if not target.exists():
-            print(target)
             target.mkdir()
 
 
@@ -106,12 +103,15 @@ def delete(path):
                 os.rmdir(i)
  
 
-if __name__ == "__main__":
+
+if os.path.isdir(path):
     create_dirs(path)
     sorter(path) 
     files_dirs(path)
     unpack_arch(path)
-    delete(path)
+    delete(path)    
+else:
+    print("Шлях не є папкою")
 
 
 
