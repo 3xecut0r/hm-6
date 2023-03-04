@@ -1,10 +1,13 @@
-from re import compile, finditer
 import pathlib as Path
 import sys
 import os
 import shutil
 
-path = sys.argv[1]
+try:
+    path = Path(sys.argv[1])
+except:
+    exit()
+
 extensions = {
 "images":['.jpeg', '.png', '.jpg', '.svg'],
 "video":['.avi', '.mp4', '.mov', '.mkv'],
@@ -17,13 +20,12 @@ extensions = {
 new_path = path
 
 
-def create_dirs(path):
-    os.mkdir(f"{path}\\images")
-    os.mkdir(f"{path}\\video")
-    os.mkdir(f"{path}\\documents")
-    os.mkdir(f"{path}\\music")
-    os.mkdir(f"{path}\\archives")
-    os.mkdir(f"{path}\\others")
+def create_dirs(path: Path):
+    for folder in extensions:
+        target = f"{path}\{folder}"
+        if not target.exists():
+            print(target)
+            target.mkdir()
 
 
 
@@ -105,10 +107,7 @@ def delete(path):
  
 
 if __name__ == "__main__":
-    try:
-        create_dirs(path)
-    except:
-        pass
+    create_dirs(path)
     sorter(path) 
     files_dirs(path)
     unpack_arch(path)
