@@ -92,10 +92,11 @@ def delete(path):
         if name not in extensions.keys():
             if len(os.listdir(i))==0:
                 os.rmdir(i)
- 
-if __name__ == "__main__":
+
+def main():
     try:
         path = pathlib.Path(sys.argv[1])
+        global new_path
         new_path = path
         if os.path.isdir(path):
             create_dirs(path)
@@ -105,3 +106,7 @@ if __name__ == "__main__":
             delete(path)     
     except:
         print("Path is not directory")  
+    
+ 
+if __name__ == "__main__":
+    main()
