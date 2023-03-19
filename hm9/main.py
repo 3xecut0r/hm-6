@@ -28,11 +28,15 @@ def input_error(func):
         try:
             return func()
         except KeyError:
-            print("Give me a name and phone please")
+            print("There is no contact with that name")
+            return func()
         except ValueError:
             print("Number is incorrect")
+            return func()
         except IndexError:
-            print("There is no contact with that name")
+            print("Give me a name and phone please")
+            return func()
+        
     return wrapper
             
         
