@@ -33,7 +33,7 @@ def input_error(func):
             print("Number is incorrect")
         except IndexError:
             print("There is no contact with that name")
-    return wrapper()
+    return wrapper
             
         
 @input_error
@@ -49,7 +49,7 @@ def main():
         
         elif "add" in command:
             res = command[4:].strip().split()
-            return add(res[0], res[1])
+            add(res[0], res[1])
             
         elif command == ".":
             break
@@ -60,15 +60,11 @@ def main():
         
         elif "change" in command:
             res = command[7:].strip().split()
-            return change(res[0], res[1])
+            change(res[0], res[1])
             
         elif "phone" in command:
             name = command[6:]
-            return phone(name)
-        
-        else:
-            return command
-        
+            phone(name)
             
 
 if __name__ == "__main__":
